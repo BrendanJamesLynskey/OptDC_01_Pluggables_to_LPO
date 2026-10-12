@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optical Technology for Data Centres 01 — Pluggable Transceivers to Linear-Drive Optics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Geist+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #1c1815;
+            --bg-card: #231e1a;
+            --bg-code: #2b2520;
+            --text-primary: #efe8dc;
+            --text-secondary: #a2978b;
+            --accent: #aabd59;
+            --accent-dim: #aabd5944;
+            --accent-glow: #aabd5933;
+            --border: #3a322b;
+            --font-display: 'Bricolage Grotesque', sans-serif;
+            --font-mono: 'Geist Mono', 'Geist Mono', monospace;
+            --font-body: 'Instrument Sans', sans-serif;
+            --max-width: 900px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 17px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ── Header ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .series-label {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 .accent {
+            color: var(--accent);
+        }
+
+        .hero .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        /* ── Tag Pills ── */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .tag {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            background: var(--accent-dim);
+            white-space: nowrap;
+        }
+
+        /* ── Pipeline Flow Bar ── */
+        .pipeline {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            margin-bottom: 1rem;
+            max-width: var(--max-width);
+        }
+
+        .pipeline-step {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 0.3rem 0.7rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .pipeline-arrow {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        /* ── Slides ── */
+        .slide {
+            min-height: 100vh;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 4rem 1.5rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-number {
+            font-family: var(--font-display);
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--accent-dim);
+            position: absolute;
+            top: 2rem;
+            right: 1.5rem;
+            line-height: 1;
+            user-select: none;
+        }
+
+        .slide h2 {
+            font-family: var(--font-display);
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            line-height: 1.25;
+        }
+
+        .slide h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .slide p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .slide p strong {
+            color: var(--text-primary);
+        }
+
+        .slide ul, .slide ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .slide li {
+            margin-bottom: 0.4rem;
+        }
+
+        .slide li strong {
+            color: var(--text-primary);
+        }
+
+        /* ── Code Blocks ── */
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 1.25rem 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            background: rgba(170,189,89,0.08);
+            padding: 0.4rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #dad1c5;
+        }
+
+        /* Syntax highlighting (manual) */
+        .kw { color: #de805a; }
+        .fn { color: #d7bbdf; }
+        .str { color: #bcdbd4; }
+        .cm { color: #a2978b; font-style: italic; }
+        .num { color: #97cdc6; }
+        .type { color: #e3b174; }
+        .dir { color: #de805a; }
+        .mac { color: #e3b174; }
+
+        /* ── Tables ── */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1.25rem 0;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: var(--bg-code);
+            color: var(--accent);
+            font-weight: 600;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-family: var(--font-display);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) td {
+            background: rgba(35,30,26,0.5);
+        }
+
+        /* ── Diagrams ── */
+        .diagram-flow {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .diagram-box {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .diagram-box.accent {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(170,189,89,0.08);
+        }
+
+        .diagram-box.dim {
+            color: var(--text-secondary);
+            border-color: var(--border);
+        }
+
+        .diagram-arrow {
+            color: var(--accent);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        /* Vertical flow diagrams */
+        .diagram-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .diagram-vertical .diagram-arrow {
+            font-size: 1.1rem;
+        }
+
+        /* Nested hierarchy diagram */
+        .hierarchy {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .hierarchy-level {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .hierarchy-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .hierarchy-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .hierarchy-item {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .hierarchy-item.accent {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(170,189,89,0.08);
+        }
+
+        /* Grid diagram */
+        .diagram-grid {
+            display: grid;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .diagram-grid.cols-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .diagram-grid.cols-3 {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .diagram-panel {
+            padding: 1rem;
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .diagram-panel.accent-border {
+            border-left: 3px solid var(--accent);
+        }
+
+        .diagram-panel h4 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .diagram-panel p, .diagram-panel ul {
+            font-size: 0.85rem;
+        }
+
+        /* ── Callout Boxes ── */
+        .callout {
+            background: var(--bg-card);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 1rem 1.25rem;
+            margin: 1.25rem 0;
+        }
+
+        .callout p {
+            margin-bottom: 0;
+        }
+
+        .callout .callout-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.3rem;
+        }
+
+        /* ── Tier Visual ── */
+        .tier-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .tier-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .tier-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            min-width: 90px;
+            text-align: right;
+        }
+
+        .tier-fill {
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 0 0.75rem;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            white-space: nowrap;
+            transition: width 0.6s ease;
+        }
+
+        .tier-cost {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            min-width: 70px;
+        }
+
+        /* ── Contents list ── */
+        .contents-list {
+            list-style: none;
+            padding-left: 0;
+            counter-reset: contents;
+        }
+
+        .contents-list li {
+            counter-increment: contents;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .contents-list li:last-child {
+            border-bottom: none;
+        }
+
+        .contents-list li::before {
+            content: counter(contents, decimal-leading-zero);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent);
+            min-width: 2rem;
+        }
+
+        .contents-list a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contents-list a:hover {
+            color: var(--accent);
+        }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .slide {
+                padding: 3rem 1rem;
+                min-height: auto;
+            }
+
+            .slide-number {
+                font-size: 3rem;
+                top: 1.5rem;
+                right: 1rem;
+            }
+
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+
+            .diagram-grid.cols-2,
+            .diagram-grid.cols-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .pipeline {
+                gap: 0.15rem;
+            }
+
+            .pipeline-step {
+                font-size: 0.6rem;
+                padding: 0.2rem 0.4rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            table {
+                font-size: 0.78rem;
+            }
+
+            .tier-label {
+                min-width: 60px;
+                font-size: 0.65rem;
+            }
+
+            .tier-fill {
+                font-size: 0.6rem;
+                height: 26px;
+            }
+        }
+
+        /* ── Interactive controls (added for Local LLM series) ── */
+        .control-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1.25rem 0;
+        }
+        .control-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .control-row label {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            min-width: 180px;
+        }
+        .control-row input[type="range"] {
+            flex: 1;
+            min-width: 160px;
+            accent-color: var(--accent);
+        }
+        .control-row input[type="number"],
+        .control-row select {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 4px;
+            padding: 0.3rem 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+        }
+        .control-row .val {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent);
+            min-width: 80px;
+            text-align: right;
+        }
+        .btn {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            padding: 0.4rem 0.9rem;
+            background: var(--accent-dim);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .btn:hover { background: rgba(170,189,89,0.2); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn.secondary {
+            background: var(--bg-code);
+            color: var(--text-secondary);
+            border-color: var(--border);
+        }
+        .result-box {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+            padding: 0.75rem 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-top: 0.75rem;
+        }
+        .result-box .line-label { color: var(--text-secondary); }
+        .result-box .line-val   { color: var(--accent); font-weight: 600; }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+        .metric {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.6rem 0.8rem;
+            text-align: center;
+        }
+        .metric .metric-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .metric .metric-value {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-top: 0.2rem;
+        }
+
+        /* Canvas / SVG containers */
+        .canvas-wrap {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1.25rem 0;
+            overflow-x: auto;
+        }
+        .canvas-wrap canvas,
+        .canvas-wrap svg {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        /* Small inline badge */
+        .badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            padding: 0.1rem 0.45rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            vertical-align: middle;
+            margin-left: 0.3rem;
+        }
+        .badge.ok    { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+        .badge.warn  { border-color: #e3b174; color: #e3b174; background: rgba(227,177,116,0.08); }
+        .badge.bad   { border-color: #de805a; color: #de805a; background: rgba(222,128,90,0.08); }
+
+
+        /* ── LLM Inference Simulators additions ── */
+        .canvas-wrap canvas { image-rendering: auto; display: block; width: 100%; height: auto; }
+        .canvas-wrap svg { max-width: 100%; height: auto; }
+        .ladder { display: grid; gap: 0.4rem; margin: 1.25rem 0; }
+        .ladder-row {
+            display: grid; grid-template-columns: 11rem 1fr 7.5rem; gap: 0.75rem; align-items: center;
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+            padding: 0.55rem 0.85rem; font-size: 0.88rem;
+        }
+        .ladder-row .rung { font-family: var(--font-display); font-weight: 600; color: var(--accent); }
+        .ladder-row .speed { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-secondary); text-align: right; }
+        .res-list { list-style: none; padding: 0; margin: 0.75rem 0; }
+        .res-list li { padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+        .res-list li:last-child { border-bottom: none; }
+        .res-list .what { color: var(--text-secondary); display: block; font-size: 0.86rem; margin-top: 0.15rem; }
+        .res-list a { color: var(--accent); text-decoration: none; }
+        .res-list a:hover { text-decoration: underline; }
+        .qa { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; margin: 0.6rem 0; padding: 0.2rem 1rem; }
+        .qa summary { cursor: pointer; padding: 0.6rem 0; font-weight: 600; }
+        .qa p, .qa ul { margin-bottom: 0.75rem; font-size: 0.92rem; }
+        .sim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.4rem 1.25rem; }
+        .chart-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+        .chart-title { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
+        .slide a { color: var(--accent); }
+        @media (max-width: 640px) {
+            .ladder-row { grid-template-columns: 1fr; gap: 0.2rem; }
+            .ladder-row .speed { text-align: left; }
+        }
+        .concepts { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 0.75rem 1rem; margin-top: 1.25rem; font-size: 0.88rem; }
+        .concepts p { margin: 0 0 0.4rem; color: var(--text-secondary); }
+        .concepts .chips { display: flex; flex-wrap: wrap; gap: 0.35rem 0.5rem; }
+        .concepts .chips a { border: 1px solid var(--border); border-radius: 999px; padding: 0.1rem 0.6rem; text-decoration: none; font-size: 0.82rem; }
+        .concepts .chips a:hover { border-color: var(--accent); }
+        .hero { overflow: hidden; }   /* the 600px glow must not widen the page on phones */
+        .chart-pair > *, .diagram-grid > *, .sim-grid > * { min-width: 0; }   /* let wide code scroll inside its column */
+        .slide p code, .slide li code, .slide td code { overflow-wrap: anywhere; }
+        @media (max-width: 640px) { .diagram-box { white-space: normal; max-width: 100%; } }   /* long boxes must wrap on phones */
+        /* FOptInf: keep long titles clear of the slide number on phones */
+        @media (max-width: 640px) { .slide h2 { padding-right: 3.6rem; } }
+        .sim-grid select, .sim-grid input[type="range"] { max-width: 100%; min-width: 0; }   /* long option labels must not spill into the next column */
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <div class="series-label">Optical Technology for Data Centres &mdash; Presentation 01</div>
+    <h1><span class="accent">Pluggable Transceivers</span> to Linear-Drive Optics</h1>
+    <p class="subtitle">What is inside a pluggable optical module and where its power goes: form factors and MSAs, the Ethernet optical interfaces from 400G to 1.6T, host electrical lanes, the retiming DSP, and what linear-drive (LPO) and linear-receive (LRO) modules save by removing it and what they give up.</p>
+
+    <div class="tags">
+        <span class="tag">QSFP-DD / OSFP</span>
+        <span class="tag">IEEE 802.3</span>
+        <span class="tag">DSP retimer</span>
+        <span class="tag">LPO</span>
+        <span class="tag">LRO</span>
+        <span class="tag">W per port</span>
+    </div>
+
+    <div class="pipeline">
+        <span class="pipeline-step">Switch SerDes</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Host trace</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">DSP (or not)</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Optics</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Fibre</span>
+    </div>
+</header>
+
+<section class="slide" id="slide-00">
+    <div class="slide-number">00</div>
+    <h2>Topics We'll Cover</h2>
+    <ul class="contents-list">
+        <li><a href="#slide-01">What a Pluggable Module Is</a></li>
+        <li><a href="#slide-02">Inside a DSP-Retimed Module</a></li>
+        <li><a href="#slide-03">The Optical Interfaces: 400G to 1.6T</a></li>
+        <li><a href="#slide-04">The Host Electrical Interface</a></li>
+        <li><a href="#slide-05">Where a Module's Power Goes</a></li>
+        <li><a href="#slide-06">Linear-Drive Pluggable Optics (LPO)</a></li>
+        <li><a href="#slide-07">Linear Receive: the Half-Way House</a></li>
+        <li><a href="#slide-08">Interactive: Module Power by Architecture</a></li>
+        <li><a href="#slide-09">What Linear Drive Gives Up</a></li>
+        <li><a href="#slide-10">The Reach Ladder: Copper, Multimode, Single-Mode</a></li>
+        <li><a href="#slide-11">Faceplates, Heat and the Switch</a></li>
+        <li><a href="#slide-12">What to Take Away</a></li>
+    </ul>
+    <div class="concepts">
+        <p><strong>Concepts used here, and where they are explained.</strong> Each links to a glossary entry: this <a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#glossary">series glossary</a>, the <a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#glossary">Silicon Photonics Fundamentals glossary</a> for device physics, or the glossaries of other sister series for concepts they already explain.</p>
+        <div class="chips"><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-pluggable" title="A self-contained optical link end that slides into a faceplate cage: electrical lanes on one side, fibre on the other. A multi-source agreement fixes the cage, connector, management interface and power envelope, so switches and optics come from different suppliers and failed modules are swapped per port.">Pluggable transceiver and MSA</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-formfactor" title="The two eight-lane form factors of 400G and 800G pluggables. QSFP-DD&#x27;s power rating rose from 20 W (2019) to 25 W (2021); OSFP has an integrated heat sink for up to 15 W with conventional airflow; OSFP-XD doubles the lanes to 16.">QSFP-DD and OSFP</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-dsp" title="The digital signal processor in a module that recovers clock and data from the lossy host trace and re-times them for the optics, and the reverse on receive. It splits one hard link into two separately specified ones, at a cost of several watts per module.">Retiming DSP</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-pmd" title="The IEEE 802.3 and MSA optical interfaces. SR: multimode VCSELs, about 100 m. DR: one wavelength per single-mode fibre pair, 500 m. FR and LR: four or eight wavelengths on a duplex fibre, 2 and 10 km. 200 Gb/s-per-lane versions are in the IEEE P802.3dj draft.">Ethernet optical interfaces: SR, DR, FR, LR</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-vsr" title="The channel from a switch&#x27;s SerDes to a pluggable module: package, board trace and connector. OIF&#x27;s CEI-112G-VSR allows up to 16 dB of loss at the Nyquist frequency, including one connector, at 100 Gb/s per lane.">Host electrical interface (VSR)</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-modpower" title="What a pluggable draws: an 800G datasheet gives 17 W maximum; DSP vendors claim 800G modules below 11–12 W. At 800 Gb/s, 11–17 W is about 14–21 pJ/bit, most of it DSP, drivers, TIAs and lasers.">Module power</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-lpo" title="A pluggable with no DSP: linear drivers and TIAs pass the waveform through, and the switch&#x27;s SerDes equalises the whole link. Vendors claim roughly half the module power; the LPO MSA (formed 2024) released its first specification, for 100 Gb/s-per-lane single-mode modules, in 2025.">Linear-drive pluggable optics (LPO)</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-lro" title="A half-way module: retimed transmit, linear receive. The launched optical signal stays standard and interoperable while the receive side goes linear; described by one vendor as saving roughly half as much as LPO.">Linear receive optics (LRO)</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-copperreach" title="How far passive twin-axial copper carries a lane: at least 2 m at 100 Gb/s per lane (IEEE 802.3ck) and an objective of at least 1 m at 200 Gb/s (P802.3dj). It roughly halves with each lane-rate doubling, which pushes optics towards the chip.">Copper reach</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#g-radix" title="A switch chip&#x27;s total bandwidth and its number of ports: 51.2 Tb/s is 64 × 800G, 102.4 Tb/s is 128 × 800G or 64 × 1.6T. Radix sets how many endpoints each tier of a fat-tree can join.">Switch capacity and radix</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#g-pam4" title="Intensity-modulation formats. NRZ (on–off keying) sends one bit per symbol on two levels; PAM4 sends two bits on four levels, halving the symbol rate for a given bit rate at the cost of eyes a third the height. 400GBASE-DR4 uses PAM4 at 53.125 GBd per lane.">NRZ and PAM4</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#g-mzm" title="An MZI with high-speed phase shifters in its arms, driven push–pull and biased at quadrature. Broadband and temperature-tolerant, but millimetres long, so it needs travelling-wave electrodes and a driver that can swing volts.">Mach–Zehnder modulator (MZM)</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#g-tia" title="The TIA turns photocurrent into a voltage; its input noise and the detector&#x27;s capacitance set the sensitivity: the smallest optical power (or OMA) that meets the target bit error ratio. The sensitivity is where a link budget ends.">Transimpedance amplifier and receiver sensitivity</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#g-grids" title="Standard channel plans. CWDM: 20 nm spacing, 18 wavelengths 1271–1611 nm (ITU-T G.694.2; CWDM4 uses 1271–1331 nm). LAN-WDM: 800 GHz near 1300 nm (100GBASE-LR4). DWDM: anchored at 193.1 THz with 12.5–100 GHz spacing (ITU-T G.694.1).">CWDM, LAN-WDM and DWDM grids</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#g-wdm" title="Several channels on one fibre, each on its own wavelength, combined by a multiplexer and separated by a demultiplexer. It multiplies bandwidth per fibre without faster electronics.">Wavelength-division multiplexing (WDM)</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#g-linkbudget" title="The bookkeeping from laser to detector: laser power minus coupling, modulator, multiplexer, fibre and connector losses and penalties must exceed the receiver&#x27;s sensitivity plus a margin. The required laser power follows from the losses, and the electrical power from the wall-plug efficiency.">Optical link budget</a><a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#g-pjbit" title="Total link power divided by data rate, in pJ/bit or fJ/bit: laser (via wall-plug efficiency), modulator driver, receiver, serialisers and clocking, thermal tuning, and any DSP. Published silicon links span from about 120 fJ/bit to a few pJ/bit; what is included matters as much as the number.">Energy per bit</a></div>
+    </div>
+</section>
+
+<section class="slide" id="slide-01">
+    <div class="slide-number">01</div>
+    <h2>What a Pluggable Module Is</h2>
+    <p>A pluggable transceiver is a self-contained optical link end that slides into a cage on a switch or network-card faceplate: electrical lanes on one side, fibre on the other. The switch maker and the optics maker agree only on the cage, the connector, the management interface and the power envelope, written down in a <strong>multi-source agreement</strong> (MSA). That separation is why pluggables won: optics can be chosen per port, replaced when they fail, and bought from many suppliers.</p>
+    <div class="table-wrap">
+    <table>
+        <tr><th>Form factor</th><th>Electrical lanes</th><th>What its MSA says (examples)</th><th>Source</th></tr>
+        <tr><td>QSFP-DD</td><td>8 (double the QSFP's 4)</td><td>Hardware rev 5.0 (2019): up to 400 Gb/s over 8 &times; 50 Gb/s, up to 20 W. Rev 6.0 (2021): module power rating raised to 25 W. Rev 7.0 (2023): QSFP-DD1600, 8 &times; 200 Gb/s</td><td><a href="https://www.lightwaveonline.com/optical-tech/transmission/article/14036073/qsfp-dd-msa-releases-common-management-interface-40-and-hardware-specification-50">Lightwave, 2019</a>; <a href="https://www.businesswire.com/news/home/20210524005213/en/QSFP-DD-MSA-Group-Announces-New-Specifications-and-Whitepaper">QSFP-DD MSA, 2021</a>; <a href="https://www.semiconductor-today.com/news_items/2023/oct/qsfp-ddmsa-021023.shtml">Semiconductor Today, 2023</a></td></tr>
+        <tr><td>OSFP</td><td>8</td><td>An integrated heat sink that &ldquo;enables modules with up to 15W power in a switch chassis with conventional airflow&rdquo;; launched (2016) for 32 400G ports per rack unit</td><td><a href="https://osfpmsa.org/index.html">OSFP MSA FAQ</a>; <a href="https://osfpmsa.org/press-releases/pr-20161115.html">launch release</a></td></tr>
+        <tr><td>OSFP-XD</td><td>16</td><td>Doubles the lanes from 8 to 16: 1.6 Tb/s on 16 &times; 100 Gb/s, 3.2 Tb/s on 16 &times; 200 Gb/s in future</td><td><a href="https://www.osfpmsa.org/assets/pdf/OSFP1600_and_OSFP-XD.pdf">OSFP MSA white paper</a></td></tr>
+    </table>
+    </div>
+    <ul>
+        <li><strong>Power envelopes grew with each generation,</strong> because each doubling of lane rate made the electronics inside work harder. Power, and the heat the faceplate can remove, is the thread of this deck.</li>
+        <li>The devices inside, modulators, photodiodes, lasers and their packaging, are explained in <a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/">Silicon Photonics Fundamentals</a> and linked from the concept chips above rather than repeated here.</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-02">
+    <div class="slide-number">02</div>
+    <h2>Inside a DSP-Retimed Module</h2>
+    <div class="canvas-wrap">
+        <svg viewBox="0 0 760 230" width="760" height="230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Block diagram of a DSP-retimed pluggable: the switch SerDes drives a host board trace into the module; a DSP recovers and re-times the signal and drives the modulator driver and laser on the transmit side; on the receive side the photodiode and TIA feed the DSP, which drives the host trace back to the switch">
+            <style>
+                .bx { fill: rgba(151,205,198,0.12); stroke: #97cdc6; }
+                .dsp { fill: rgba(222,128,90,0.25); stroke: #de805a; }
+                .op { fill: rgba(227,177,116,0.18); stroke: #e3b174; }
+                .mod { fill: none; stroke: #a2978b; stroke-dasharray: 5 4; }
+                .ln { stroke: #aabd59; stroke-width: 2; fill: none; }
+                .t  { fill: #efe8dc; font-family: 'Geist Mono', monospace; font-size: 11px; }
+                .d  { fill: #a2978b; font-family: 'Geist Mono', monospace; font-size: 10px; }
+            </style>
+            <rect x="20" y="40" width="100" height="150" class="bx"/><text x="34" y="118" class="t">switch</text><text x="34" y="132" class="t">SerDes</text>
+            <rect x="200" y="20" width="540" height="190" class="mod"/><text x="560" y="14" class="d">pluggable module</text>
+            <rect x="230" y="40" width="110" height="150" class="dsp"/><text x="262" y="118" class="t">DSP</text><text x="240" y="134" class="d">CDR, equalise</text>
+            <rect x="400" y="45" width="110" height="45" class="op"/><text x="412" y="72" class="t">driver</text>
+            <rect x="560" y="45" width="150" height="45" class="op"/><text x="570" y="66" class="t">laser + modulator</text><text x="570" y="80" class="d">EML, DML or Si MZM</text>
+            <rect x="400" y="140" width="110" height="45" class="op"/><text x="412" y="167" class="t">TIA</text>
+            <rect x="560" y="140" width="150" height="45" class="op"/><text x="570" y="167" class="t">photodiode</text>
+            <path class="ln" d="M120 70 L230 70"/><path class="ln" d="M340 67 L400 67"/><path class="ln" d="M510 67 L560 67"/><path class="ln" d="M710 67 L750 67"/>
+            <path class="ln" d="M750 162 L710 162"/><path class="ln" d="M560 162 L510 162"/><path class="ln" d="M400 162 L340 162"/><path class="ln" d="M230 160 L120 160"/>
+            <text x="135" y="62" class="d">host trace</text><text x="135" y="178" class="d">host trace</text>
+            <text x="716" y="58" class="d">fibre</text><text x="716" y="180" class="d">fibre</text>
+        </svg>
+    </div>
+    <ul>
+        <li><strong>The DSP splits one hard link into two easier ones.</strong> It recovers the clock and data from the lossy host trace, then drives the optics with a clean, re-timed signal; on the receive side it equalises what the photodiode and TIA deliver before driving the host trace again. Each half is specified, tested and debugged on its own.</li>
+        <li><strong>Transmit optics</strong> are an electro-absorption modulated laser (EML), a directly modulated laser, or a continuous-wave laser with a silicon Mach&ndash;Zehnder modulator (<a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#g-mzm">MZM</a>); <strong>receive</strong> is a photodiode and a transimpedance amplifier (<a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#g-tia">TIA</a>).</li>
+        <li><strong>PAM4 at 100 Gb/s per lane and above</strong> (<a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/#g-pam4">PAM4</a>) made the DSP necessary: four-level eyes are a third the height of NRZ ones and need equalisation that analogue circuits alone struggle to deliver across every host board and fibre.</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-03">
+    <div class="slide-number">03</div>
+    <h2>The Optical Interfaces: 400G to 1.6T</h2>
+    <div class="table-wrap">
+    <table>
+        <tr><th>Interface</th><th>How it is built</th><th>Reach</th><th>Defined by</th></tr>
+        <tr><td>400GBASE-SR8</td><td>8 fibre pairs, 850 nm VCSELs, 50 Gb/s each</td><td>70 m OM3, 100 m OM4 and OM5</td><td><a href="https://www.ieee802.org/3/cm/">IEEE 802.3cm-2020</a></td></tr>
+        <tr><td>400GBASE-DR4</td><td>4 parallel single-mode fibre pairs, 100 Gb/s PAM4 each</td><td>500 m</td><td><a href="https://www.ieee802.org/3/bs/">IEEE 802.3bs-2017</a></td></tr>
+        <tr><td>400G-FR4</td><td>4 CWDM wavelengths &times; 100 Gb/s PAM4 on one duplex fibre</td><td>2 km</td><td><a href="https://www.100glambda.com">100G Lambda MSA</a></td></tr>
+        <tr><td>400G-LR4-10</td><td>4 wavelengths &times; 100 Gb/s PAM4, duplex</td><td>10 km</td><td>100G Lambda MSA (<a href="https://www.businesswire.com/news/home/20201008005121/en/100G-Lambda-MSA-Announces-Release-of-a-400G-Specification-for-10-km-of-Single-mode-Fiber">2020</a>)</td></tr>
+        <tr><td>800GBASE-DR8, -SR8</td><td>8 lanes of 100 Gb/s</td><td>DR8: 500 m</td><td><a href="https://standards.ieee.org/standard/802_3df-2024.html">IEEE 802.3df-2024</a> (approved 15 February 2024)</td></tr>
+        <tr><td>800GBASE-DR4, 1.6TBASE-DR8, 800GBASE-FR4, -LR4</td><td>200 Gb/s per lane</td><td>DR: 500 m</td><td><a href="https://www.ieee802.org/3/dj/index.html">IEEE P802.3dj</a>, a draft in Standards Association ballot (recirculation in October 2026)</td></tr>
+    </table>
+    </div>
+    <ul>
+        <li><strong>Names encode the build:</strong> SR is multimode, DR is parallel single-mode for 500 m, FR and LR are wavelength-multiplexed single-mode for 2 and 10 km, and the trailing number is the count of lanes or wavelengths. The wavelength plans are the CWDM and LAN-WDM grids of <a href="https://brendanjameslynskey.github.io/OptSiP_01_Waveguides_and_WDM/#slide-11">OptSiP 01</a>.</li>
+        <li><strong>Parallel fibre against wavelengths:</strong> DR modules need one laser wavelength and no multiplexer but eight or sixteen fibres; FR and LR modules need multiplexers and several laser wavelengths but only two fibres. Inside a cluster hall, where many links fit within 500 m, DR is the natural fit (<a href="https://brendanjameslynskey.github.io/OptDC_04_AI_Cluster_Networks/">deck 04</a>).</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-04">
+    <div class="slide-number">04</div>
+    <h2>The Host Electrical Interface</h2>
+    <p>Between the switch chip's SerDes and the module sits the host channel: package, board trace, connector and the module's own short trace. OIF specifies it so that any host and any module interoperate.</p>
+    <div class="table-wrap">
+    <table>
+        <tr><th>Specification</th><th>What it allows</th><th>Source</th></tr>
+        <tr><td>CEI-112G-VSR (very short reach), 100 Gb/s per lane</td><td>Up to 16 dB of loss at the Nyquist frequency, including one connector, for 36&ndash;58 GBd PAM4; the reference channel has at least 10 cm of host trace, a connector and 2 cm of module trace</td><td>OIF (<a href="https://www.oiforum.com/wp-content/uploads/00311c-OIF-112G-OFC-slides_ofc20_presentation.pdf">OFC 2020 presentation</a>)</td></tr>
+        <tr><td>CEI-224G, 200 Gb/s per lane</td><td>A framework document for the next generation, including very short reach to modules and shorter reaches for co-packaging</td><td>OIF-FD-CEI-224G-01.0, February 2022 (<a href="https://www.oiforum.com/wp-content/uploads/OIF-FD-CEI-224G-01.0.pdf">PDF</a>)</td></tr>
+    </table>
+    </div>
+    <ul>
+        <li><strong>16 dB is a lot.</strong> At about 26.6 GHz (the Nyquist frequency of 106.25 Gb/s PAM4) board traces lose more per centimetre as frequency rises, so the switch SerDes and the module DSP each carry substantial equalisation: the CTLE, FFE and DFE of the <a href="https://brendanjameslynskey.github.io/SerDes_Equalisation/">Equalisation in High-Speed Serial Links</a> deck.</li>
+        <li><strong>Each doubling of lane rate doubles the Nyquist frequency</strong> and raises loss per centimetre, so at 200 Gb/s per lane the faceplate is a harder place to reach from a large switch package. That pressure drives both linear drive (this deck) and co-packaged optics (<a href="https://brendanjameslynskey.github.io/OptDC_02_Co_Packaged_Optics/">deck 02</a>).</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-05">
+    <div class="slide-number">05</div>
+    <h2>Where a Module's Power Goes</h2>
+    <div class="table-wrap">
+    <table>
+        <tr><th>Figure</th><th>What it is</th><th>Source (all vendor material)</th></tr>
+        <tr><td>17 W maximum (16 W typical)</td><td>An 800G twin-port OSFP module, 2 &times; DR4, 500 m: the datasheet's maximum power dissipation</td><td>NVIDIA MMS4X00-NM (<a href="https://docs.nvidia.com/networking/display/mms4x00nm800g500m/specifications">datasheet</a>)</td></tr>
+        <tr><td>Below 11 W (single-mode), below 10 W (multimode)</td><td>800G modules built on a 5 nm 100G-per-lane PAM4 DSP with integrated driver and TIA, as the DSP's maker claims</td><td>Broadcom BCM85812 (<a href="https://investors.broadcom.com/news-releases/news-release-details/broadcom-introduces-industrys-first-5nm-100glane-optical-pam-4">press release, 2023</a>)</td></tr>
+        <tr><td>Below 12 W</td><td>800G modules on a 5 nm DSP, as its maker claims</td><td>Marvell Spica Gen2 (<a href="https://investor.marvell.com/2022-12-08-Marvell-Expands-Leadership-in-800G-PAM4-DSPs-with-5nm-Electro-Optics-Platform-for-Cloud-Data-Centers">press release, 2022</a>)</td></tr>
+    </table>
+    </div>
+    <ul>
+        <li><strong>Per bit:</strong> 17 W at 800 Gb/s is about 21 pJ/bit; 11 W is about 14 pJ/bit. The silicon photonic links of <a href="https://brendanjameslynskey.github.io/OptSiP_03_Lasers_and_Energy_per_Bit/#slide-10">OptSiP 03</a> report from femtojoules for a modulator to a few picojoules for a whole link: the difference is mostly DSP, host-facing electronics and lasers.</li>
+        <li><strong>Per switch:</strong> a 51.2 Tb/s switch carries 64 &times; 800G ports (<a href="#slide-11">slide 11</a>); at 17 W each its optics may draw up to 1,088 W.</li>
+        <li><strong>The DSP is the target.</strong> Laser, driver and TIA power scale with the optics; the DSP's power scales with the digital work of equalisation and clock recovery on both sides, and removing it is the idea behind linear drive.</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-06">
+    <div class="slide-number">06</div>
+    <h2>Linear-Drive Pluggable Optics (LPO)</h2>
+    <div class="canvas-wrap">
+        <svg viewBox="0 0 760 170" width="760" height="170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A linear-drive module: the switch SerDes drives a linear driver and modulator directly, and the photodiode and linear TIA drive the host trace directly, with no DSP in the module">
+            <style>
+                .bx { fill: rgba(151,205,198,0.12); stroke: #97cdc6; }
+                .op { fill: rgba(227,177,116,0.18); stroke: #e3b174; }
+                .mod { fill: none; stroke: #a2978b; stroke-dasharray: 5 4; }
+                .ln { stroke: #aabd59; stroke-width: 2; fill: none; }
+                .t  { fill: #efe8dc; font-family: 'Geist Mono', monospace; font-size: 11px; }
+                .d  { fill: #a2978b; font-family: 'Geist Mono', monospace; font-size: 10px; }
+            </style>
+            <rect x="20" y="25" width="140" height="125" class="bx"/><text x="34" y="80" class="t">switch SerDes</text><text x="34" y="96" class="d">equalises the</text><text x="34" y="108" class="d">whole link</text>
+            <rect x="240" y="15" width="500" height="145" class="mod"/><text x="590" y="10" class="d">LPO module: no DSP</text>
+            <rect x="290" y="30" width="140" height="40" class="op"/><text x="300" y="55" class="t">linear driver</text>
+            <rect x="500" y="30" width="200" height="40" class="op"/><text x="510" y="55" class="t">laser + modulator</text>
+            <rect x="290" y="105" width="140" height="40" class="op"/><text x="300" y="130" class="t">linear TIA</text>
+            <rect x="500" y="105" width="200" height="40" class="op"/><text x="510" y="130" class="t">photodiode</text>
+            <path class="ln" d="M160 50 L290 50"/><path class="ln" d="M430 50 L500 50"/><path class="ln" d="M700 50 L750 50"/>
+            <path class="ln" d="M750 125 L700 125"/><path class="ln" d="M500 125 L430 125"/><path class="ln" d="M290 125 L160 125"/>
+        </svg>
+    </div>
+    <ul>
+        <li><strong>The idea:</strong> remove the module DSP and let the switch's own SerDes, which must already equalise the host trace, equalise the optics and fibre too. The driver and TIA become linear amplifiers that pass the waveform through without re-timing it.</li>
+        <li><strong>The LPO MSA</strong> was formed on 21 March 2024 by twelve companies (Accelink, AMD, Arista, Broadcom, Cisco, Eoptolink, Hisense, Innolight, Intel, MACOM, NVIDIA, Semtech) (<a href="https://www.businesswire.com/news/home/20240321794629/en/">press release</a>), and on 25 March 2025 released its first specification: 100 Gb/s-per-lane single-mode modules for 100G to 800G Ethernet, with optical and electrical requirements for the switch, the network card and the module, by then with more than 50 member companies (<a href="https://www.globenewswire.com/news-release/2025/03/25/3048840/0/en/LPO-MSA-Announces-Release-of-Specification-for-Linear-Pluggable-Optical-Modules.html">press release</a>).</li>
+        <li><strong>What vendors claim it saves:</strong> Adtran puts first-generation 800G LPO at 5&ndash;8 W against well over 10 W for DSP-based modules (<a href="https://gazettabyte.com/adtran-breaks-the-1w-barrier-with-800g-linear-pluggable-optics/">Gazettabyte</a>); Semtech puts retimed 800G at 12&ndash;16 W and LPO at 4&ndash;8 W (<a href="https://blog.semtech.com/ai-data-center-basics-what-is-linear-pluggable-optics-lpo">Semtech blog</a>). Both are vendor claims; no peer-reviewed measurement was found for this deck.</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-07">
+    <div class="slide-number">07</div>
+    <h2>Linear Receive: the Half-Way House</h2>
+    <div class="diagram-grid cols-3">
+        <div class="diagram-panel accent-border">
+            <h4>Retimed (DSP)</h4>
+            <p>A DSP in both directions. Each half of the link is specified separately; the module works with any compliant host.</p>
+        </div>
+        <div class="diagram-panel accent-border">
+            <h4>Linear receive (LRO)</h4>
+            <p>Retimed transmit, linear receive (also called RTLR). The transmitted optical signal stays clean and standard; the receive path hands the host an unretimed signal.</p>
+        </div>
+        <div class="diagram-panel accent-border">
+            <h4>Linear drive (LPO)</h4>
+            <p>Linear in both directions. Lowest power; the switch SerDes, host trace, optics and far end form one analogue channel that must be specified as a whole.</p>
+        </div>
+    </div>
+    <ul>
+        <li><strong>How much LRO saves:</strong> Juniper's optics guide calls LRO a compromise with &ldquo;roughly half the power and cost savings compared to LPO&rdquo; (<a href="https://www.juniper.net/documentation/us/en/hardware/800g-optics-cables-guide/optics/topics/concept/800g-optic-types-lpolro.html">Juniper</a>). Semtech's figures for 200 Gb/s-per-lane modules are about 23&ndash;25 W retimed, about 16 W LRO and about 10 W LPO (<a href="https://blog.semtech.com/ai-data-center-basics-what-is-linear-pluggable-optics-lpo">Semtech blog</a>; vendor claims).</li>
+        <li><strong>Why transmit is the half to keep:</strong> a retimed transmitter launches a standard optical signal that any receiver can be tested against, so the optical link stays interoperable while the receive side, which faces only one host, goes linear. No IEEE or OIF definition of LRO was found; the LPO MSA lists it as future work.</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-08">
+    <div class="slide-number">08</div>
+    <h2>Interactive: Module Power by Architecture</h2>
+    <p>One module's power split into DSP, optics (lasers, drivers, TIAs) and everything else (controller, power conversion), for the three architectures, scaled up to a switch. <strong>Every default is illustrative</strong>, chosen to sit inside the vendor ranges of <a href="#slide-05">slides 05</a> and <a href="#slide-06">06</a> (a DSP module near 11 W, an LPO module in the 5&ndash;8 W range); change them to match a datasheet. The model takes LRO as keeping half the DSP, and charges linear drive an extra amount of host SerDes power for driving an unretimed channel.</p>
+    <div class="control-panel">
+        <div class="sim-grid">
+            <div class="control-row"><label for="pm-rate">Module rate (Gb/s)</label><input type="range" id="pm-rate" min="400" max="1600" step="400" value="800"><span class="val" id="pm-rate-val">800</span></div>
+            <div class="control-row"><label for="pm-ports">Ports per switch</label><input type="range" id="pm-ports" min="16" max="128" step="16" value="64"><span class="val" id="pm-ports-val">64</span></div>
+            <div class="control-row"><label for="pm-dsp">DSP (W)</label><input type="range" id="pm-dsp" min="0" max="15" step="0.5" value="5"><span class="val" id="pm-dsp-val">5.0</span></div>
+            <div class="control-row"><label for="pm-opt">Optics (W)</label><input type="range" id="pm-opt" min="1" max="12" step="0.5" value="5"><span class="val" id="pm-opt-val">5.0</span></div>
+            <div class="control-row"><label for="pm-oth">Other (W)</label><input type="range" id="pm-oth" min="0" max="4" step="0.5" value="1"><span class="val" id="pm-oth-val">1.0</span></div>
+            <div class="control-row"><label for="pm-host">Extra host SerDes (W)</label><input type="range" id="pm-host" min="0" max="4" step="0.5" value="1"><span class="val" id="pm-host-val">1.0</span></div>
+        </div>
+        <div class="metric-grid">
+            <div class="metric"><div class="metric-label">DSP-retimed module</div><div class="metric-value" id="pm-w-dsp">&mdash;</div></div>
+            <div class="metric"><div class="metric-label">LRO (module + host)</div><div class="metric-value" id="pm-w-lro">&mdash;</div></div>
+            <div class="metric"><div class="metric-label">LPO (module + host)</div><div class="metric-value" id="pm-w-lpo">&mdash;</div></div>
+            <div class="metric"><div class="metric-label">DSP energy per bit</div><div class="metric-value" id="pm-pj-dsp">&mdash;</div></div>
+            <div class="metric"><div class="metric-label">LPO energy per bit</div><div class="metric-value" id="pm-pj-lpo">&mdash;</div></div>
+            <div class="metric"><div class="metric-label">Saved per switch</div><div class="metric-value" id="pm-sw">&mdash;</div></div>
+        </div>
+        <div id="pm-bars" style="margin-top:0.9rem;"></div>
+        <p id="pm-note" style="font-size:0.85rem; margin-top:0.6rem;"></p>
+    </div>
+    <p style="font-size:0.85rem;">Limits: a static power split with no dependence on reach, temperature or lane rate; the host SerDes term stands for whatever extra equalisation or drive the switch must provide, which the vendor figures above do not separate out. Energy per bit is module power divided by its rate.</p>
+        <style>@media (max-width: 640px) { .sim-grid .control-row label { min-width: 0; flex-basis: 100%; } .sim-grid .control-row input[type="range"] { min-width: 0; } }</style>
+    <script>
+    (function(){
+        const $ = id => document.getElementById(id);
+        const g = id => +$(id).value;
+        const ids = ['pm-rate', 'pm-dsp', 'pm-opt', 'pm-oth', 'pm-host', 'pm-ports'];
+        const COLS = { dsp: '#de805a', optics: '#97cdc6', other: '#8a8078', host: '#e3b174' };
+        function module(kind) {
+            const dsp = kind === 'dsp' ? g('pm-dsp') : kind === 'lro' ? g('pm-dsp') / 2 : 0;   // LRO keeps the transmit-side half of the DSP
+            const host = kind === 'lpo' ? g('pm-host') : kind === 'lro' ? g('pm-host') / 2 : 0; // extra host SerDes effort to drive an unretimed path
+            return { dsp, optics: g('pm-opt'), other: g('pm-oth'), host };
+        }
+        const sum = m => Object.values(m).reduce((a, b) => a + b, 0);
+        function rec() {
+            ids.forEach(id => $(id + '-val').textContent = (+$(id).value).toFixed(id === 'pm-ports' || id === 'pm-rate' ? 0 : 1));
+            const rate = g('pm-rate'), ports = g('pm-ports');
+            const rows = ['dsp', 'lro', 'lpo'].map(k => ({ k, m: module(k) }));
+            const max = Math.max(...rows.map(r => sum(r.m)));
+            const name = { dsp: 'DSP-retimed', lro: 'LRO (transmit retimed)', lpo: 'LPO (linear both ways)' };
+            $('pm-bars').innerHTML = rows.map(r => {
+                const t = sum(r.m);
+                return '<div style="display:grid; grid-template-columns: minmax(0,9rem) 1fr; gap:0.6rem; align-items:center; margin:0.35rem 0;">' +
+                    '<span style="font-family: var(--font-mono); font-size:0.75rem; color: var(--text-secondary);">' + name[r.k] + '</span>' +
+                    '<div style="display:flex; height:24px; gap:2px; min-width:0; width:' + (100 * t / max).toFixed(1) + '%;">' +
+                    Object.entries(r.m).filter(([, v]) => v > 0).map(([c, v]) => '<span title="' + c + ' ' + v.toFixed(1) + ' W" style="display:block; min-width:0; background:' + COLS[c] + '; flex:' + v + ' 1 0;"></span>').join('') +
+                    '</div></div>';
+            }).join('') + '<div style="display:flex; flex-wrap:wrap; gap:0.3rem 1rem; margin-top:0.5rem; font-family: var(--font-mono); font-size:0.72rem; color: var(--text-secondary);">' +
+                Object.entries(COLS).map(([c, col]) => '<span><i style="display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:0.35rem; background:' + col + ';"></i>' + (c === 'host' ? 'extra host SerDes' : c) + '</span>').join('') + '</div>';
+            const P = Object.fromEntries(rows.map(r => [r.k, sum(r.m)]));
+            $('pm-w-dsp').textContent = P.dsp.toFixed(1) + ' W'; $('pm-w-lro').textContent = P.lro.toFixed(1) + ' W'; $('pm-w-lpo').textContent = P.lpo.toFixed(1) + ' W';
+            $('pm-pj-dsp').textContent = (P.dsp / rate * 1000).toFixed(1) + ' pJ/bit';
+            $('pm-pj-lpo').textContent = (P.lpo / rate * 1000).toFixed(1) + ' pJ/bit';
+            $('pm-sw').textContent = (ports * (P.dsp - P.lpo)).toFixed(0) + ' W';
+            $('pm-note').innerHTML = 'A switch with ' + ports + ' ports of ' + rate + 'G modules spends ' + (ports * P.dsp).toFixed(0) + ' W on DSP-retimed optics, ' +
+                (ports * P.lro).toFixed(0) + ' W on LRO and ' + (ports * P.lpo).toFixed(0) + ' W on LPO. Linear drive saves ' + (100 * (1 - P.lpo / P.dsp)).toFixed(0) + '% of the module power with these inputs; ' +
+                'the price is that the host SerDes, the board traces and the optics must together meet the link specification with no retimer to clean the signal up.';
+            window.pmState = { dsp: P.dsp, lro: P.lro, lpo: P.lpo, save: 1 - P.lpo / P.dsp };
+        }
+        ids.forEach(id => $(id).addEventListener('input', rec));
+        window.pmDemo = { set(o) { for (const [k, v] of Object.entries(o)) $(k).value = v; rec(); return window.pmState; } };
+        rec();
+    })();
+    </script>
+</section>
+
+<section class="slide" id="slide-09">
+    <div class="slide-number">09</div>
+    <h2>What Linear Drive Gives Up</h2>
+    <ul>
+        <li><strong>A split link.</strong> With a DSP, the host side and the optical side are separate links with separate specifications. Without one, the switch SerDes, package, board, connector, module, fibre and far-end receiver form one analogue channel, and every combination of switch and module must be qualified together. The LPO MSA exists to specify the host side as well as the module for exactly this reason (<a href="#slide-06">slide 06</a>).</li>
+        <li><strong>Margin.</strong> Noise and distortion from the host trace and the optics add instead of being reset in the middle. Reach and fibre types are narrower: the LPO MSA's first specification covers single-mode modules at 100 Gb/s per lane.</li>
+        <li><strong>Diagnostics.</strong> A DSP sees both sides of the link and reports signal quality; a linear module sees little, which makes faults harder to localise in a large fabric (<a href="https://brendanjameslynskey.github.io/OptDC_04_AI_Cluster_Networks/#slide-10">deck 04</a> on link failures).</li>
+        <li><strong>The next lane rate.</strong> IEEE P802.3dj's 200 Gb/s-per-lane optical interfaces are specified as retimed links (<a href="#slide-03">slide 03</a>); whether linear drive extends to 200 Gb/s per lane depends on host SerDes and channel quality, and LRO is one answer.</li>
+    </ul>
+    <div class="callout">
+        <div class="callout-label">The general lesson</div>
+        <p>Every architecture in this series moves the same work, equalising a lossy electrical channel and converting to light, to a different place. LPO moves it into the switch SerDes; co-packaged optics shortens the channel so there is less to equalise (<a href="https://brendanjameslynskey.github.io/OptDC_02_Co_Packaged_Optics/">deck 02</a>).</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-10">
+    <div class="slide-number">10</div>
+    <h2>The Reach Ladder: Copper, Multimode, Single-Mode</h2>
+    <div class="ladder">
+        <div class="ladder-row"><span class="rung">Passive copper, 100G/lane</span><span>Twin-axial cable at 100 Gb/s per lane: &ldquo;lengths up to at least 2 m&rdquo; (<a href="https://www.ieee802.org/3/ck/">IEEE 802.3ck-2022</a>)</span><span class="speed">&ge; 2 m</span></div>
+        <div class="ladder-row"><span class="rung">Passive copper, 200G/lane</span><span>Objective of &ldquo;up to at least 1.0 meter&rdquo; at 200 Gb/s per lane (<a href="https://grouper.ieee.org/groups/802/3/dj/projdoc/objectives_P802d3dj_240314.pdf">P802.3dj objectives</a>)</span><span class="speed">&ge; 1 m</span></div>
+        <div class="ladder-row"><span class="rung">Multimode (SR)</span><span>850 nm VCSELs on OM3/OM4/OM5 fibre (<a href="https://www.ieee802.org/3/cm/">802.3cm</a>)</span><span class="speed">70&ndash;150 m</span></div>
+        <div class="ladder-row"><span class="rung">Parallel single-mode (DR)</span><span>One wavelength per fibre pair (<a href="https://www.ieee802.org/3/bs/">802.3bs</a>, <a href="https://standards.ieee.org/standard/802_3df-2024.html">802.3df</a>)</span><span class="speed">500 m</span></div>
+        <div class="ladder-row"><span class="rung">WDM single-mode (FR, LR)</span><span>Four or eight wavelengths on a duplex fibre (<a href="https://www.100glambda.com">100G Lambda MSA</a>)</span><span class="speed">2&ndash;10 km</span></div>
+    </div>
+    <ul>
+        <li><strong>Copper's reach halves as the lane rate doubles</strong>, on these objectives: that is the force pushing optics ever closer to the chips, inside racks and eventually inside packages.</li>
+        <li><strong>Copper is passive and almost free in power and failures;</strong> optics costs watts and lasers but goes further. NVIDIA's rack-scale NVLink domain is built on copper for this reason (<a href="https://brendanjameslynskey.github.io/OptDC_04_AI_Cluster_Networks/#slide-03">deck 04</a>).</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-11">
+    <div class="slide-number">11</div>
+    <h2>Faceplates, Heat and the Switch</h2>
+    <div class="table-wrap">
+    <table>
+        <tr><th>Switch silicon</th><th>Capacity</th><th>SerDes</th><th>Source (vendor)</th></tr>
+        <tr><td>Broadcom Tomahawk 5 (2022)</td><td>51.2 Tb/s</td><td>512 &times; 100G PAM4: 64 ports of 800G</td><td><a href="https://www.nasdaq.com/press-release/broadcom-ships-tomahawk-5-industrys-highest-bandwidth-switch-chip-to-accelerate-ai-ml">press release</a></td></tr>
+        <tr><td>Broadcom Tomahawk 6 (2025)</td><td>102.4 Tb/s</td><td>512 &times; 200G (or 1,024 &times; 100G)</td><td><a href="https://investors.broadcom.com/news-releases/news-release-details/broadcom-ships-tomahawk-6-worlds-first-1024-tbps-switch">press release</a></td></tr>
+    </table>
+    </div>
+    <ul>
+        <li><strong>Faceplate arithmetic.</strong> A 51.2 Tb/s switch with 64 &times; 800G OSFP ports fills two rack units (Arista 7060X6-64PE, <a href="https://www.arista.com/en/products/7060x6-series-quick-look">datasheet</a>). At 102.4 Tb/s the same faceplate needs 1.6T modules, or twice the ports.</li>
+        <li><strong>Heat.</strong> Each module's heat must leave through the faceplate airflow (OSFP's integrated heat sink was designed for this, <a href="#slide-01">slide 01</a>), while the switch chip's heat leaves through its own heat sink. Every watt saved in a module is a watt the faceplate no longer has to remove.</li>
+        <li><strong>The electrical reach.</strong> From a large switch package to 64 faceplate cages is many centimetres of board trace at 26.6 GHz Nyquist or more (<a href="#slide-04">slide 04</a>). Co-packaged optics removes that trace altogether (<a href="https://brendanjameslynskey.github.io/OptDC_02_Co_Packaged_Optics/">deck 02</a>).</li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-12">
+    <div class="slide-number">12</div>
+    <h2>What to Take Away</h2>
+    <ul>
+        <li><strong>Pluggables won through separation:</strong> an MSA-defined cage, connector and power envelope let switch and optics makers work independently and let operators replace optics per port.</li>
+        <li><strong>The DSP splits the link</strong> into a host electrical half (OIF CEI-112G-VSR: up to 16 dB at Nyquist) and an optical half (IEEE 802.3 and MSA interfaces), at a cost of several watts per module: 800G datasheets and vendor claims put modules between about 11 and 17 W, 14 to 21 pJ/bit.</li>
+        <li><strong>LPO removes the DSP</strong> and makes the switch SerDes equalise the whole link; vendors claim roughly half the module power. <strong>LRO</strong> keeps the transmit retimer for interoperability and saves about half as much.</li>
+        <li><strong>The price is a link specified end to end</strong>, with less margin and fewer diagnostics; the LPO MSA (2024&ndash;2025) is the industry's attempt to specify it.</li>
+        <li><strong>Copper's reach halves with each lane-rate doubling</strong> (at least 2 m at 100 Gb/s, an objective of at least 1 m at 200 Gb/s), pushing optics towards the chip.</li>
+        <li><strong>Next:</strong> <a href="https://brendanjameslynskey.github.io/OptDC_02_Co_Packaged_Optics/">deck 02</a> puts the optics in the package.</li>
+    </ul>
+</section>
+
+<!-- ════════════════════════════════════ Footer ════════════════════════════════════ -->
+<footer class="footer">
+    <p>Part of the <a href="https://github.com/BrendanJamesLynskey/Optical_Hub_Data_Centres">Optical Technology for Data Centres series</a> &middot; <a href="https://brendanjameslynskey.github.io/Optical_Hub_Data_Centres/#glossary">glossary: every concept and where it is explained</a> &middot; numbers: cited on each slide or computed live in the interactive</p>
+    <p style="margin-top: 0.5rem; font-size: 0.8rem;"><a href="https://brendanjameslynskey.github.io/OptDC_02_Co_Packaged_Optics/">02 Co-Packaged Optics and Optical I/O &rarr;</a></p>
+    <p style="margin-top: 0.5rem; font-size: 0.8rem;">Sister series: <a href="https://brendanjameslynskey.github.io/Optical_Hub_Silicon_Photonics/">Silicon Photonics Fundamentals</a> (the device physics) &middot; <a href="https://github.com/BrendanJamesLynskey/Optical_Hub_AI_Processing">Optical Technology for AI Processing</a> (planned) &middot; <a href="https://brendanjameslynskey.github.io/LLM_Hub_Compute_in_Transit/">Compute in Transit</a> &middot; <a href="https://brendanjameslynskey.github.io/LLM_Hub_Fourier_Optics_Training/">Fourier Optics for Training</a> &middot; <a href="https://brendanjameslynskey.github.io/LLM_Hub_Inference_Simulators/">LLM Inference Simulators</a></p>
+</footer>
+
+<script>
+    // Smooth scroll for TOC links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
+    // Subtle fade-in on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.slide').forEach(slide => {
+        slide.style.opacity = '0';
+        slide.style.transform = 'translateY(30px)';
+        slide.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(slide);
+    });
+</script>
+
+</body>
+</html>
